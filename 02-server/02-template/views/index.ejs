@@ -8,36 +8,36 @@
 <html lang="en">
 
 <head>
-  <title>
-    <% name %>
-  </title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="./assets/style.css">
-  <script src="./assets/main.js"></script>
+    <title>
+        Template Demo
+    </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/style.css">
+    <script src="./assets/main.js"></script>
 
 </head>
 
 <body>
-  <div class="content">
-    <div id="jquery-accordion-menu" class="jquery-accordion-menu">
-      <div class="jquery-accordion-menu-header">
-        <%= name %>
-      </div>
-      <ul>
-        <% menus.forEach(function(menu){ %>
-          <li><a href="#"><i class="fa fa-user"></i>
-              <%= menu %>
-            </a></li>
-          <% }); %>
-      </ul>
-      <div class="jquery-accordion-menu-footer">Footer </div>
+    <div class="content">
+        <div id="jquery-accordion-menu" class="jquery-accordion-menu">
+            <div class="jquery-accordion-menu-header">
+                <%= name %>
+            </div>
+            <ul>
+                <% menus.forEach(function(menu){ %>
+                    <li><a href="#"><i class="fa fa-user"></i>
+                            <%= menu %>
+                        </a></li>
+                    <% }); %>
+            </ul>
+            <div class="jquery-accordion-menu-footer">Footer </div>
+        </div>
     </div>
-  </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>
