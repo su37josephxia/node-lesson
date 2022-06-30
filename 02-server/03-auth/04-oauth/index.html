@@ -52,14 +52,15 @@
       methods: {
         async oauth() {
           window.open('/auth/github/login', '_blank')
-          const intervalId = setInterval(() => {
-            console.log("等待认证中..");
-            if (window.localStorage.getItem("authSuccess")) {
-              clearInterval(intervalId);
-              window.localStorage.removeItem("authSuccess");
+          const interalId = setInterval(() => {
+            console.log('轮训认证状态....')
+            if(window.localStorage.getItem('authSuccess')) {
+              console.log('认证成功！')
+              clearInterval(interalId)
+              window.localStorage.removeItem('authSuccess')
               this.getUser()
             }
-          }, 500);
+          },500)
         },
         async getUser() {
           const res = await axios.get("/auth/github/userinfo");

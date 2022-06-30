@@ -17,58 +17,69 @@ const config = {
 }
 
 router.get('/auth/github/login', async (ctx) => {
-    var dataStr = (new Date()).valueOf();
-    //重定向到认证接口,并配置参数
-    var path = `https://github.com/login/oauth/authorize?${querystring.stringify({ client_id: config.client_id })}`;
-
-    //转发到授权服务器
-    ctx.redirect(path);
+    // 重定向页面
+    const path = `https://github.com/login/oauth/authorize?${querystring.stringify({
+        client_id: config.client_id
+    })}`
+    ctx.redirect(path)
 })
 
-router.get('/auth/github/callback', async (ctx) => {
-    console.log('callback..')
-    const code = ctx.query.code;
+
+router.get('/auth/github/callback', async ctx => {
+    const { code } = ctx.query
+    console.log('授权码:' + code)
+
     const params = {
         client_id: config.client_id,
         client_secret: config.client_secret,
-        code: code
+        code
     }
-    let res = await axios.post('https://github.com/login/oauth/access_token', params)
-
+    const res = await axios.post(`https://github.com/login/oauth/access_token`, params)
     const { access_token } = querystring.parse(res.data)
 
-    const uid = (Math.random() * 999999999999).toFixed()
+    const uid = (Math.random() * 999999).toFixed()
     accessTokens[uid] = access_token
 
     const token = jwt.sign(
         {
             data: uid,
-            // 设置 token 过期时间，一小时后，秒为单位
             exp: Math.floor(Date.now() / 1000) + 60 * 60
         },
         secret
     )
-    ctx.response.type = 'html';
-    console.log('token:', token)
-    ctx.response.body = ` <script>window.localStorage.setItem("authSuccess","true");window.localStorage.setItem("token","${token}");window.close();</script>`;
+
+    // 将token保存到localstorage =》 js
+    // 关闭认证页面
+    // 通知主页面认证完成  设置 success标志 (localstorage) + 页面轮训
+    ctx.response.body = `<script>
+        window.localStorage.setItem("authSuccess", "true");
+        window.localStorage.setItem("token","${token}");
+        window.close();
+    </script>`
+
 })
 
-router.get('/auth/github/userinfo', jwtAuth({
-    secret
-}), async (ctx) => {
-    // 验证通过，state.user
-    console.log('666jwt playload:', ctx.state.user, accessTokens)
-    const access_token = accessTokens[ctx.state.user.data]
-    const url = 'https://api.github.com/user'
-    console.log('url:', url)
-    res = await axios.get(url, {
-        headers: {
-            Authorization: `token ${access_token}`
-        }
-    })
-    console.log('userAccess:', res)
-    ctx.body = res.data
-})
+
+router.get('/auth/github/userinfo',
+    jwtAuth({
+        secret
+    }),
+    async ctx => {
+        const access_token = accessTokens[ctx.state.user.data]
+        const url = `https://api.github.com/user`
+
+        const res = await axios.get(url, {
+            headers: {
+                Authorization: `token ${access_token}`
+            }
+        })
+
+
+        ctx.body = res.data
+    }
+
+
+)
 
 app.use(router.routes()); /*启动路由*/
 app.listen(7001);
